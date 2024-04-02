@@ -1,42 +1,34 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerMover))]
-[RequireComponent(typeof(ScoreCounter))]
 [RequireComponent(typeof(CollisionHandler))]
+[RequireComponent (typeof(Animator))]
 public class Player : MonoBehaviour
 {
-    private PlayerMover _playerMover;
-    private ScoreCounter _scoreCounter;
-    private CollisionHandler _handler;
+    [SerializeField] private ScoreCounter _counter;
 
-    public event Action GameOver;
+    private int _isDead = Animator.StringToHash("isDead");
+    private CollisionHandler _handler;
+    private Animator _animator;
 
     private void Awake()
     {
-        _scoreCounter = GetComponent<ScoreCounter>();
-        _playerMover = GetComponent<PlayerMover>();
         _handler = GetComponent<CollisionHandler>();
+        _animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
-        _handler.CollisionDetected += ProcessCollision;
+        _handler.CollisionDetected += OnCollisionDetected;
     }
 
     private void OnDisable()
     {
-        _handler.CollisionDetected -= ProcessCollision;
+        _handler.CollisionDetected -= OnCollisionDetected;
     }
 
-    public void Reset()
+    private void OnCollisionDetected()
     {
-        _scoreCounter.Reset();
-        _playerMover.Reset();
-    }
-
-    private void ProcessCollision(IInteractable interactable)
-    {
-        GameOver?.Invoke();
+        _animator.SetBool(_isDead, true);
     }
 }
