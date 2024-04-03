@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayersShooter : Shooter
 {
     [SerializeField] private ObjectPool _pool;

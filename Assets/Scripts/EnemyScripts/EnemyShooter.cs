@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Enemy))]
+[RequireComponent (typeof(Rigidbody2D))]
 public class EnemyShooter : Shooter
 {
     public event Action IsShoot;
