@@ -15,20 +15,18 @@ public class SpawnerChooser : MonoBehaviour
         _delay = new WaitForSeconds(_spawnTime);
     }
 
-    private void Update()
+    private void Start()
     {
-        if (_isCanChoose)
-        {
-            StartCoroutine(Choose());
-        }
+        StartCoroutine(Choosing());
     }
 
-    private IEnumerator Choose()
+    private IEnumerator Choosing()
     {
-        _isCanChoose = false;
-        EnemySpawner current = _spawners[Random.Range(0, _spawners.Length)];
-        current.Spawn();
-        yield return _delay;
-        _isCanChoose = true;
+        while (_isCanChoose && _spawners.Length > 0)
+        {
+            EnemySpawner choosenSpawner = _spawners[Random.Range(0, _spawners.Length)];
+            choosenSpawner.Spawn();
+            yield return _delay;
+        }
     }
 }

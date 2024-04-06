@@ -1,40 +1,29 @@
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource), typeof(Shooter))]
 public class EnemySoundsHandler : MonoBehaviour
 {
-    [SerializeField] private AudioClip _explosionSound;
-
     private AudioSource _audioSource;
-    private EnemyShooter _shooter;
-    private Enemy _enemy;
+    private Shooter _shooter;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _shooter = GetComponent<EnemyShooter>();
-        _enemy = GetComponent<Enemy>();
+        _shooter = GetComponent<Shooter>();
     }
 
     private void OnEnable()
     {
-        _enemy.IsDead += PlayExplosionSound;
         _shooter.IsShoot += PlayShootSound;
     }
 
     private void OnDisable()
     {
-        _enemy.IsDead += PlayExplosionSound;
         _shooter.IsShoot += PlayShootSound;
     }
 
     private void PlayShootSound()
     {
-        _audioSource.PlayOneShot(_audioSource.clip);
-    }
-
-    private void PlayExplosionSound()
-    {
-        _audioSource.PlayOneShot(_explosionSound);
+        _audioSource.Play();
     }
 }

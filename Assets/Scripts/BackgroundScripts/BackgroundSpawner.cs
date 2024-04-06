@@ -30,7 +30,7 @@ public class BackgroundSpawner : MonoBehaviour
         float xOffset = 16.31f;
 
         _pool.PutObject(disabledBackground.gameObject);
-        var spawnedBackground = _pool.GetObject();
+        GameObject spawnedBackground = _pool.GetObject();
         spawnedBackground.SetActive(true);
         spawnedBackground.transform.position = _spawnPoint.position;
         _spawnPoint.position = new Vector3(_spawnPoint.position.x + xOffset, _spawnPoint.position.y, _spawnPoint.position.z);

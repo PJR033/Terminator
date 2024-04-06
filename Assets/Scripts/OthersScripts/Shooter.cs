@@ -1,27 +1,53 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public abstract class Shooter : MonoBehaviour
+public class Shooter : MonoBehaviour
 {
-    [SerializeField] protected Transform ShootPoint;
-    [SerializeField] protected float ShootDelay;
-    [SerializeField] protected float SpeedForce;
+    [SerializeField] private Transform _shootPoint;
+    [SerializeField] private ObjectPool _pool;
+    [SerializeField] private float _shootDelay;
+    [SerializeField] private float _speedForce;
 
-    protected bool IsCanShoot = true;
+    private bool _isCanShoot;
+    private Rigidbody2D _rigidbody;
+    private WaitForSeconds _delay;
 
-    protected abstract IEnumerator Shoot();
+    public event Action IsShoot;
 
-    protected GameObject CreateBullet(ObjectPool pool, Rigidbody2D rigidbody)
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _delay = new WaitForSeconds(_shootDelay);
+    }
+
+    private void OnEnable()
+    {
+        _isCanShoot = true;
+    }
+
+    public void SetPool(ObjectPool pool)
+    {
+        _pool = pool;
+    }
+
+    public IEnumerator Shooting()
     {
         Rigidbody2D bulletRigidbody;
 
-        var bullet = pool.GetObject();
-        bullet.SetActive(true);
-        bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
-        bullet.transform.position = ShootPoint.position;
-        bulletRigidbody.velocity = (bulletRigidbody.transform.position - rigidbody.transform.position).normalized * SpeedForce;
-
-        return bullet;
+        if(_isCanShoot)
+        {
+            IsShoot?.Invoke();
+            var bullet = _pool.GetObject();
+            bullet.SetActive(true);
+            bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
+            bullet.transform.position = _shootPoint.position;
+            bullet.transform.rotation = _shootPoint.rotation;
+            bulletRigidbody.velocity = (bulletRigidbody.transform.position - _rigidbody.transform.position).normalized * _speedForce;
+            _isCanShoot = false;
+            yield return _delay;
+            _isCanShoot = true;
+        }
     }
 }

@@ -2,19 +2,16 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerMover))]
 [RequireComponent(typeof(CollisionHandler))]
-[RequireComponent (typeof(Animator))]
 public class Player : MonoBehaviour
 {
     [SerializeField] private ScoreCounter _counter;
+    [SerializeField] private ObjectPool _explosionsPool;
 
-    private int _isDead = Animator.StringToHash("isDead");
     private CollisionHandler _handler;
-    private Animator _animator;
 
     private void Awake()
     {
         _handler = GetComponent<CollisionHandler>();
-        _animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -29,6 +26,11 @@ public class Player : MonoBehaviour
 
     private void OnCollisionDetected()
     {
-        _animator.SetBool(_isDead, true);
+        GameObject createdExplosion = _explosionsPool.GetObject();
+        Explosion explosion = createdExplosion.GetComponent<Explosion>();
+        explosion.SetPool(_explosionsPool);
+        createdExplosion.transform.position = transform.position;
+        createdExplosion.SetActive(true);
+        gameObject.SetActive(false);
     }
 }

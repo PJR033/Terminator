@@ -1,15 +1,15 @@
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource), typeof(Shooter))]
 public class PlayersSoundsHandler : MonoBehaviour
 {
     private AudioSource _audioSource;
-    private PlayersShooter _shooter;
+    private Shooter _shooter;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _shooter = GetComponent<PlayersShooter>();
+        _shooter = GetComponent<Shooter>();
     }
 
     private void OnEnable()
